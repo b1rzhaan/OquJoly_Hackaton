@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-10">
+    <div class="max-w-7xl mx-auto px-4">
+        
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Каталог университетов</h1>
+            <p class="text-gray-500 mt-2">Найди подходящий вуз с помощью фильтров</p>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-8">
+            
+            <div class="w-full md:w-1/4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-24">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">Фильтры</h3>
+                        <a href="{% url 'list' %}" class="text-sm text-blue-600 hover:underline">Сбросить</a>
+                    </div>
+
+                    <form method="GET" action="{% url 'list' %}">
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Поиск</label>
+                            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Название вуза..." 
+                                   class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-blue-500">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Город</label>
+                            <select name="city" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-blue-500">
+                                <option value="">Все города</option>
+                                {% for city in cities %}
+                                    <option value="{{ city }}" {% if request.GET.city == city %}selected{% endif %}>
+                                        {{ city }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Направление</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="tag" value="" {% if not request.GET.tag %}checked{% endif %} class="text-blue-600">
+                                    <span class="text-sm text-gray-600">Все</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="tag" value="IT" {% if request.GET.tag == 'IT' %}checked{% endif %} class="text-blue-600">
+                                    <span class="text-sm text-gray-600">IT технологии</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="tag" value="Медицина" {% if request.GET.tag == 'Медицина' %}checked{% endif %} class="text-blue-600">
+                                    <span class="text-sm text-gray-600">Медицина</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="tag" value="Педагогика" {% if request.GET.tag == 'Педагогика' %}checked{% endif %} class="text-blue-600">
+                                    <span class="text-sm text-gray-600">Педагогика</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition">
+                            Применить
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="w-full md:w-3/4">
+                {% if universities %}
+                    <div class="grid grid-cols-1 gap-6">
+                        {% for uni in universities %}
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-48 h-32 md:h-auto bg-gray-100 rounded-xl relative overflow-hidden flex-shrink-0">
+                                <img src="{{ uni.logo }}" alt="{{ uni.name }}" class="w-full h-full object-contain p-2">
+                                <div class="absolute top-2 right-2 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-md">
+                                    {{ uni.overall_grade }}
+                                </div>
+                            </div>
+
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h2 class="text-xl font-bold text-gray-900 mb-1">{{ uni.name }}</h2>
+                                        <div class="flex items-center text-gray-500 text-sm mb-3">
+                                            <i data-lucide="map-pin" class="w-4 h-4 mr-1"></i>
+                                            {{ uni.city }}
+                                        </div>
+                                    </div>
+                                    <div class="hidden md:block">
+                                        <span class="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                                            {{ uni.tuition }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    {% for tag in uni.get_tags_list %}
+                                        <span class="text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-md">
+                                            {{ tag }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="border-t pt-4 flex justify-between items-center mt-auto">
+                                    <div class="flex gap-4 text-sm">
+                                        <div>
+                                            <span class="text-gray-400 block text-xs">ЕНТ баллы</span>
+                                            <span class="font-bold text-gray-700">{{ uni.min_ent }}+</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-gray-400 block text-xs">Шанс</span>
+                                            <span class="font-bold text-green-600">{{ uni.chance }}</span>
+                                        </div>
+                                    </div>
+                                    <button class="bg-white border border-blue-600 ...">
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
+                        <i data-lucide="search-x" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-medium text-gray-900">Университеты не найдены</h3>
+                        <p class="text-gray-500 mt-2">Попробуйте изменить параметры поиска</p>
+                        <a href="{% url 'list' %}" class="inline-block mt-4 text-blue-600 font-medium hover:underline">
+                            Сбросить фильтры
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

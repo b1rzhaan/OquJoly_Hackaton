@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="relative h-[400px] bg-gray-900">
+    <img src="{{ uni.image_url|default:'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop' }}" 
+         class="w-full h-full object-cover opacity-50">
+    
+    <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent">
+        <div class="max-w-7xl mx-auto flex items-end gap-6">
+            <img src="{{ uni.logo }}" class="w-24 h-24 bg-white rounded-xl p-2 shadow-lg object-contain">
+            <div class="text-white mb-2">
+                <h1 class="text-4xl font-bold">{{ uni.name }}</h1>
+                <p class="flex items-center gap-2 text-lg opacity-90">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i> {{ uni.city }}
+                </p>
+            </div>
+            
+            <div class="ml-auto hidden md:flex items-center gap-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'favorite' uni.id %}" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition group" title="В избранное">
+                        <i data-lucide="heart" class="w-6 h-6 {% if user in uni.favorites.all %}fill-red-500 text-red-500{% else %}text-white{% endif %} transition"></i>
+                    </a>
+                {% endif %}
+
+                <button class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-600/50">
+                    Подать заявку
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <div class="md:col-span-2 space-y-8">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <h2 class="text-2xl font-bold mb-4">Об университете</h2>
+            <p class="text-gray-600 leading-relaxed">
+                {{ uni.name }} — один из ведущих вузов Казахстана. Университет предлагает широкий спектр образовательных программ и славится своими достижениями в области {{ uni.tags }}.
+            </p>
+            
+            <div class="grid grid-cols-2 gap-4 mt-6">
+                <div class="bg-blue-50 p-4 rounded-xl">
+                    <p class="text-sm text-gray-500">Стоимость обучения</p>
+                    <p class="text-lg font-bold text-blue-700">{{ uni.tuition }}</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-xl">
+                    <p class="text-sm text-gray-500">Шанс поступления</p>
+                    <p class="text-lg font-bold text-green-700">{{ uni.chance }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <h2 class="text-2xl font-bold mb-6">Поступление</h2>
+            <div class="flex items-center gap-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 rounded-full border-4 border-blue-500 flex items-center justify-center text-xl font-bold text-gray-800 mx-auto mb-2">
+                        {{ uni.min_ent }}+
+                    </div>
+                    <p class="text-sm text-gray-500">Мин. балл ЕНТ</p>
+                </div>
+                <div class="h-16 w-px bg-gray-200"></div>
+                <div>
+                    <p class="font-bold text-gray-800 mb-1">Необходимые предметы:</p>
+                    <ul class="list-disc list-inside text-gray-600 text-sm">
+                        <li>Математика</li>
+                        <li>Физика / География</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-900">OquJoly Grade</h3>
+                <span class="text-xs text-gray-400">Рейтинг</span>
+            </div>
+            
+            <div class="flex items-center justify-center mb-8">
+                <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-4xl font-bold shadow-inner">
+                    {{ uni.overall_grade }}
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2">
+                    <span class="text-gray-600">🎓 Академическая часть</span>
+                    <span class="font-bold text-gray-800">A</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2">
+                    <span class="text-gray-600">🎉 Студенческая жизнь</span>
+                    <span class="font-bold text-gray-800">B+</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">📍 Локация</span>
+                    <span class="font-bold text-gray-800">A+</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 h-64 relative z-0">
+            <div id="mini-map" class="w-full h-full rounded-xl"></div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 py-8 mb-20">
+    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-2xl font-bold mb-8">Отзывы студентов ({{ reviews.count }})</h2>
+
+        {% if user.is_authenticated %}
+        <form method="POST" class="mb-12 bg-gray-50 p-6 rounded-xl">
+            {% csrf_token %}
+            <h3 class="font-bold mb-4">Оставить отзыв</h3>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Ваша оценка</label>
+                <select name="rating" class="p-2 border rounded-lg outline-none focus:border-blue-500 bg-white">
+                    <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                    <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                    <option value="3">⭐⭐⭐ (3/5)</option>
+                    <option value="2">⭐⭐ (2/5)</option>
+                    <option value="1">⭐ (1/5)</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Комментарий</label>
+                <textarea name="text" rows="3" required placeholder="Расскажите о своем опыте..." class="w-full p-3 border rounded-lg outline-none focus:border-blue-500"></textarea>
+            </div>
+
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
+                Отправить отзыв
+            </button>
+        </form>
+        {% else %}
+        <div class="bg-blue-50 p-4 rounded-xl mb-8 text-blue-800 flex items-center gap-2">
+            <i data-lucide="info" class="w-5 h-5"></i>
+            <span><a href="{% url 'login' %}" class="font-bold underline">Войдите</a>, чтобы оставить отзыв.</span>
+        </div>
+        {% endif %}
+
+        <div class="space-y-6">
+            {% for review in reviews %}
+            <div class="border-b border-gray-100 pb-6 last:border-0">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            {{ review.user.username|first|upper }}
+                        </div>
+                        <div>
+                            <p class="font-bold text-gray-900">{{ review.user.username }}</p>
+                            <p class="text-xs text-gray-400">{{ review.created_at|date:"d.m.Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 text-sm tracking-widest">
+                        {% with ''|center:review.rating as range %}
+                        {% for _ in range %}★{% endfor %}
+                        {% endwith %}
+                    </div>
+                </div>
+                <p class="text-gray-600 mt-2">{{ review.text }}</p>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 text-center py-8 bg-gray-50 rounded-xl">Пока нет отзывов. Будьте первым!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Шағын карта
+    var map = L.map('mini-map', {
+        zoomControl: false, 
+        scrollWheelZoom: false,
+        dragging: false
+    }).setView([{{ uni.lat }}, {{ uni.lng }}], 13);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+    var blueIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: "<div style='background-color:#2563eb; width:12px; height:12px; border-radius:50%; border:2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'></div>",
+        iconSize: [12, 12]
+    });
+
+    L.marker([{{ uni.lat }}, {{ uni.lng }}], {icon: blueIcon}).addTo(map);
+</script>
+{% endblock %}

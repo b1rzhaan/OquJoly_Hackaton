@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="bg-[#1B4D3E] pt-20 pb-20 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 rounded-full text-white/90 text-sm font-medium mb-8">
+            <span>🎓</span> ТВОЁ БУДУЩЕЕ НАЧИНАЕТСЯ ЗДЕСЬ
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+            Найди свой идеальный университет <br> <span class="text-[#FFD700]">в Казахстане</span>
+        </h1>
+        <div class="bg-white p-2 rounded-full shadow-2xl max-w-2xl mx-auto flex items-center">
+            <i data-lucide="search" class="w-5 h-5 text-gray-400 ml-4"></i>
+            <form action="{% url 'list' %}" method="GET" class="flex-grow flex">
+                <input type="text" name="q" placeholder="Поиск университета или специальности..." class="w-full py-3 px-4 text-gray-700 outline-none rounded-l-full">
+                <button type="submit" class="bg-[#1B4D3E] text-white px-8 py-2.5 rounded-full font-medium hover:bg-[#153a2f] transition">Найти</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="bg-[#FDFBF7] py-16">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Ваш поиск уникален. Как и вы сами.</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+            <div class="flex flex-col items-center group">
+                <div class="w-20 h-20 mb-4 text-[#1B4D3E]"><i data-lucide="telescope" class="w-full h-full"></i></div>
+                <h3 class="font-bold text-[#1B4D3E] uppercase mb-2">Аналитика</h3>
+                <p class="text-sm text-gray-500 px-8">Мы анализируем данные, чтобы вам не пришлось этого делать.</p>
+            </div>
+            <div class="flex flex-col items-center group">
+                <div class="w-20 h-20 mb-4 text-[#1B4D3E]"><i data-lucide="message-circle" class="w-full h-full"></i></div>
+                <h3 class="font-bold text-[#1B4D3E] uppercase mb-2">Отзывы</h3>
+                <p class="text-sm text-gray-500 px-8">Читайте честные отзывы студентов и выпускников.</p>
+            </div>
+            <div class="flex flex-col items-center group">
+                <div class="w-20 h-20 mb-4 text-[#1B4D3E]"><i data-lucide="puzzle" class="w-full h-full"></i></div>
+                <h3 class="font-bold text-[#1B4D3E] uppercase mb-2">Подбор</h3>
+                <p class="text-sm text-gray-500 px-8">Персонализированный поиск по вашим критериям.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-[#FDFBF7] pb-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="{% url 'list' %}" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-lg transition">
+                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mx-auto mb-6"><i data-lucide="graduation-cap" class="w-7 h-7"></i></div>
+                <h3 class="text-xl font-bold mb-2">120+ Университетов</h3>
+                <p class="text-gray-500 text-sm">Полная база данных всех вузов Казахстана</p>
+            </a>
+            <a href="#" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-lg transition">
+                <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mx-auto mb-6"><i data-lucide="trending-up" class="w-7 h-7"></i></div>
+                <h3 class="text-xl font-bold mb-2">Реальные отзывы</h3>
+                <p class="text-gray-500 text-sm">Мнения студентов и выпускников</p>
+            </a>
+            <a href="#map-section" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-lg transition">
+                <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mx-auto mb-6"><i data-lucide="map" class="w-7 h-7"></i></div>
+                <h3 class="text-xl font-bold mb-2">Интерактивная карта</h3>
+                <p class="text-gray-500 text-sm">Поиск по локации</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-end mb-10">
+            <h2 class="text-3xl font-bold text-gray-900">Топ-5 вузов по IT</h2>
+            <a href="{% url 'list' %}" class="text-blue-600 border border-blue-200 px-6 py-2 rounded-full hover:bg-blue-50 transition">Показать все</a>
+        </div>
+        <div class="flex gap-6 overflow-x-auto pb-4 no-scrollbar">
+            {% for uni in top_universities %}
+            <div class="min-w-[300px] md:min-w-[350px] bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex justify-between items-start mb-4">
+                    <img src="{{ uni.logo }}" class="w-14 h-14 object-contain rounded-lg border p-1">
+                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-sm font-bold">{{ uni.overall_grade }}</span>
+                </div>
+                <h3 class="text-xl font-bold mb-1"><a href="{% url 'detail' uni.id %}">{{ uni.name }}</a></h3>
+                <p class="text-sm text-gray-500 mb-4 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> {{ uni.city }}</p>
+                <div class="space-y-2 text-sm bg-gray-50 p-3 rounded-lg">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Стоимость</span>
+                        <span class="font-semibold">{{ uni.tuition }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">ЕНТ</span>
+                        <span class="font-semibold">{{ uni.min_ent }}+</span>
+                    </div>
+                </div>
+                <div class="mt-4 flex gap-2">
+                    <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">IT</span>
+                    <span class="bg-green-50 text-green-600 px-3 py-1 rounded-full text-xs font-medium">Гранты</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="bg-white py-24 border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-start gap-16">
+        
+        <div class="w-full md:w-1/2 sticky top-24">
+            <p class="text-green-700 font-bold tracking-widest text-sm uppercase mb-4">ВЫБЕРИ СВОЙ ВУЗ</p>
+            <h2 class="text-4xl md:text-5xl font-black text-[#1B4D3E] mb-6 leading-tight">
+                Всё, что вам нужно для принятия решения.
+            </h2>
+            <svg width="100" height="15" viewBox="0 0 100 15" class="mb-6"><path d="M0,5 Q25,15 50,5 T100,5" fill="none" stroke="#25C26C" stroke-width="3"/></svg>
+            <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                Благодаря информации о каждом университете, вам будет проще сравнивать вузы и программы. Мы собрали всё в одном месте.
+            </p>
+            <div class="flex flex-col gap-4">
+                <a href="{% url 'list' %}" class="text-[#1B4D3E] font-bold text-lg hover:text-[#25C26C] flex items-center gap-2 transition">
+                    Сравнение университетов <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="text-[#1B4D3E] font-bold text-lg hover:text-[#25C26C] flex items-center gap-2 transition">
+                    Поиск по специальностям <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="w-full md:w-1/2 flex flex-col items-center justify-center gap-8">
+            
+            <div class="w-full max-w-sm bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform hover:-translate-y-2 transition duration-300">
+                <div class="h-32 relative overflow-hidden group">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/KBTU_Building.jpg" 
+                         alt="KBTU" 
+                         class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    <div class="absolute inset-0 bg-black/10"></div>
+                </div>
+                <div class="p-6 relative">
+                    <div class="absolute -top-8 left-6 w-16 h-16 bg-white rounded-full border-4 border-white flex items-center justify-center shadow-md">
+                        <span class="text-xs font-black text-[#1B4D3E]">KBTU</span>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-900 mb-2 mt-4">KBTU</h3>
+                    <p class="text-sm text-gray-500 mb-4">Алматы, Казахстан</p>
+                    <div class="flex justify-between border-t border-gray-100 pt-4">
+                        <span class="font-bold text-[#1B4D3E]">ЕНТ 110+</span>
+                        <span class="font-bold text-[#1B4D3E]">IT Лидер</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full max-w-sm bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform hover:-translate-y-2 transition duration-300 md:ml-12">
+                <div class="h-32 relative overflow-hidden group">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Nazarbayev_University_main_entrance.jpg/1200px-Nazarbayev_University_main_entrance.jpg" 
+                         alt="Nazarbayev Univ" 
+                         class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    <div class="absolute inset-0 bg-black/10"></div>
+                </div>
+                <div class="p-6 relative">
+                    <div class="absolute -top-8 left-6 w-16 h-16 bg-white rounded-full border-4 border-white flex items-center justify-center shadow-md">
+                        <span class="text-xs font-black text-[#1B4D3E]">NU</span>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-900 mb-2 mt-4">Nazarbayev Univ</h3>
+                    <p class="text-sm text-gray-500 mb-4">Астана, Казахстан</p>
+                    <div class="flex justify-between border-t border-gray-100 pt-4">
+                        <span class="font-bold text-[#1B4D3E]">IELTS 6.5+</span>
+                        <span class="font-bold text-[#1B4D3E]">Грант 95%</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="bg-[#F8FAFC] py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold">Лучшие медицинские вузы</h2>
+            <a href="#" class="px-6 py-2 border rounded-full text-blue-600 hover:bg-blue-50">Показать все</a>
+        </div>
+        <div class="bg-white border rounded-3xl p-6 flex flex-col md:flex-row gap-8 shadow-sm hover:shadow-md transition">
+            <div class="w-full md:w-48 h-48 bg-gray-100 rounded-2xl overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-grow">
+                <div class="flex justify-between">
+                    <h3 class="text-2xl font-bold mb-2">КазНМУ им. Асфендиярова</h3>
+                    <span class="w-10 h-10 bg-green-100 text-green-700 flex items-center justify-center rounded-full font-bold">A</span>
+                </div>
+                <p class="text-gray-500 mb-6"><i data-lucide="map-pin" class="w-4 h-4 inline"></i> Алматы</p>
+                <div class="flex gap-8 mb-6">
+                    <div><p class="text-xs text-gray-400">Стоимость</p><p class="font-bold">1.2-2.0 млн ₸</p></div>
+                    <div><p class="text-xs text-gray-400">Средний балл</p><p class="font-bold">115+</p></div>
+                </div>
+                <div class="flex gap-2">
+                    <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-sm">Медицина</span>
+                    <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-sm">Стоматология</span>
+                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-sm">Гранты есть</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-[#1B4D3E] text-white py-24 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-[#25C26C] rounded-l-full opacity-10"></div>
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-16 relative z-10">
+        <div class="w-full md:w-1/2">
+            <div class="bg-white p-6 rounded-2xl shadow-xl max-w-sm mx-auto text-gray-900 transform -rotate-2">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-bold">Your List ❤️</span>
+                </div>
+                <div class="flex items-center gap-3 mb-3 bg-gray-50 p-2 rounded-lg">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg"></div>
+                    <div><p class="font-bold text-sm">SDU University</p><span class="text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Applied</span></div>
+                </div>
+                <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-lg">
+                    <div class="w-10 h-10 bg-red-100 rounded-lg"></div>
+                    <div><p class="font-bold text-sm">KIMEP</p><span class="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">Researching</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="w-full md:w-1/2">
+            <p class="text-[#86efac] font-bold tracking-widest uppercase mb-4">ОСТАВАЙТЕСЬ НА ВЕРНОМ ПУТИ</p>
+            <h2 class="text-4xl font-bold mb-6">Инструменты для организации поиска вуза.</h2>
+            <p class="text-lg opacity-90 mb-8">Мы поможем вам составить список, отслеживать прогресс и получать новые рекомендации.</p>
+            <a href="{% url 'list' %}" class="inline-block border-b-2 border-white font-bold hover:text-[#86efac] hover:border-[#86efac] transition">Начните исследовать</a>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white py-24">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-16">
+        <div class="w-full md:w-1/2">
+            <p class="text-green-700 font-bold tracking-widest text-sm uppercase mb-4">РЕАЛЬНЫЕ ИСТОРИИ</p>
+            <h2 class="text-4xl font-bold mb-8 text-[#1B4D3E]">OquJoly помог миллионам студентов найти своё место.</h2>
+            <div class="pl-6 border-l-4 border-green-500">
+                <p class="text-xl italic text-gray-600 mb-6">"Я не знала, с чего начать поиск. OquJoly помог мне структурировать все варианты и выбрать лучший грант."</p>
+                <div class="flex items-center gap-3">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover">
+                    <p class="font-bold text-gray-900">Айгерим К.</p>
+                </div>
+            </div>
+        </div>
+        <div class="w-full md:w-1/2">
+            <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1000&auto=format&fit=crop" class="rounded-[3rem] shadow-2xl rotate-2">
+        </div>
+    </div>
+</div>
+
+<div id="map-section" class="bg-[#F8FAFC] py-20">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-8 text-[#1B4D3E]">Исследуй университеты по всему Казахстану</h2>
+        <div id="map" class="h-[500px] w-full rounded-[2rem] shadow-2xl border-4 border-white z-0"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // scrollWheelZoom: true - зум енді мышкамен жұмыс істейді
+        var map = L.map('map', {scrollWheelZoom: true}).setView([48.0196, 66.9237], 5);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 20 }).addTo(map);
+        
+        const universities = [
+            { name: "Назарбаев Университет", lat: 51.090530, lng: 71.398165, city: "Астана" },
+            { name: "КазНУ им. аль-Фараби", lat: 43.225260, lng: 76.922580, city: "Алматы" },
+            { name: "КБТУ", lat: 43.255100, lng: 76.942500, city: "Алматы" }
+        ];
+        var blueIcon = L.divIcon({ className: 'custom-div-icon', html: "<div style='background-color:#2563eb; width:14px; height:14px; border-radius:50%; border:3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'></div>", iconSize: [14, 14] });
+        universities.forEach(function(uni) { L.marker([uni.lat, uni.lng], {icon: blueIcon}).addTo(map).bindPopup(uni.name); });
+    });
+</script>
+{% endblock %}
